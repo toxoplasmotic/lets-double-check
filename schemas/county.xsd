@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://example.com/countyinfo"
+           xmlns:tns="http://example.com/countyinfo"
+           elementFormDefault="qualified">
+
+    <!-- Root element -->
+    <xs:element name="CountyInfo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="LastUpdated" type="xs:dateTime"/>
+                <xs:element name="CountyName" type="xs:string"/>
+                <xs:element name="StateName" type="xs:string"/>
+                <xs:element name="WikipediaLink" type="xs:anyURI" minOccurs="0"/>
+                <xs:element name="Population" type="xs:positiveInteger"/>
+                <xs:element name="CountyShape">
+                    <xs:annotation>
+                        <xs:documentation>GIS shape of the county, e.g., in WKT (Well-Known Text) or GeoJSON format as a string.</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Precincts">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Precinct" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Name" type="xs:string"/>
+                                        <xs:element name="Number" type="xs:string"/>
+                                        <xs:element name="PollingLocation">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Latitude" type="xs:decimal"/>
+                                                    <xs:element name="Longitude" type="xs:decimal"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="PrecinctShape">
+                                            <xs:annotation>
+                                                <xs:documentation>GIS shape of the precinct, e.g., in WKT (Well-Known Text) or GeoJSON format as a string.</xs:documentation>
+                                            </xs:annotation>
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:minLength value="1"/>
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
