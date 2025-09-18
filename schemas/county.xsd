@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://example.com/countyinfo"
-           xmlns:tns="http://example.com/countyinfo"
+           targetNamespace="http://example.com/countydata"
+           xmlns:cd="http://example.com/countydata"
            elementFormDefault="qualified">
 
     <!-- Root element -->
-    <xs:element name="CountyInfo">
+    <xs:element name="CountyData">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="LastUpdated" type="xs:dateTime"/>
@@ -13,17 +13,9 @@
                 <xs:element name="StateName" type="xs:string"/>
                 <xs:element name="WikipediaLink" type="xs:anyURI" minOccurs="0"/>
                 <xs:element name="Population" type="xs:positiveInteger"/>
-                <xs:element name="CountyShape">
-                    <xs:annotation>
-                        <xs:documentation>GIS shape of the county, e.g., in WKT (Well-Known Text) or GeoJSON format as a string.</xs:documentation>
-                    </xs:annotation>
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:minLength value="1"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                <xs:element name="Precincts">
+                <xs:element name="Coordinates" type="cd:GeoPoint"/>
+                <xs:element name="Shape" type="cd:GeoShape"/>
+                <xs:element name="Precincts" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="Precinct" maxOccurs="unbounded">
@@ -31,24 +23,10 @@
                                     <xs:sequence>
                                         <xs:element name="Name" type="xs:string"/>
                                         <xs:element name="Number" type="xs:string"/>
-                                        <xs:element name="PollingLocation">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="Latitude" type="xs:decimal"/>
-                                                    <xs:element name="Longitude" type="xs:decimal"/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                        <xs:element name="PrecinctShape">
-                                            <xs:annotation>
-                                                <xs:documentation>GIS shape of the precinct, e.g., in WKT (Well-Known Text) or GeoJSON format as a string.</xs:documentation>
-                                            </xs:annotation>
-                                            <xs:simpleType>
-                                                <xs:restriction base="xs:string">
-                                                    <xs:minLength value="1"/>
-                                                </xs:restriction>
-                                            </xs:simpleType>
-                                        </xs:element>
+                                        <xs:element name="Number" type="xs:string"/>
+                                        <xs:element name="PollingPlaceName" type="xs:string"/>
+                                        <xs:element name="PollingPlaceCoordinates" type="cd:GeoPoint"/>
+                                        <xs:element name="Shape" type="cd:GeoShape"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
@@ -58,5 +36,47 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <!-- GeoPoint type for coordinates (lat/lon) -->
+    <xs:complexType name="GeoPoint">
+        <xs:sequence>
+            <xs:element name="Latitude" type="xs:double"/>
+            <xs:element name="Longitude" type="xs:double"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- GeoShape type based on GeoJSON structure -->
+    <xs:complexType name="GeoShape">
+        <xs:sequence>
+            <xs:element name="Type" type="xs:string"/> <!-- e.g., "Feature" -->
+            <xs:element name="Geometry">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Type" type="xs:string"/> <!-- e.g., "Polygon" -->
+                        <xs:element name="Coordinates">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="Ring" maxOccurs="unbounded"> <!-- Supports multiple rings for holes -->
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="Point" maxOccurs="unbounded">
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="Longitude" type="xs:double"/>
+                                                            <xs:element name="Latitude" type="xs:double"/>
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 
 </xs:schema>
