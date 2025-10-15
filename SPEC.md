@@ -25,7 +25,7 @@ A website to help citizens host their own nonpartisan hand-counted exit poll for
 ## Techincal Specs
 - Use the Dotnet stack (C#).
 - All data used by the site should be pulled from the Github repo.
-- State and county boundaries are to be stored in the /data folder.
+- State and county boundaries are to be stored in the /data folder. State boundaries are already downloaded.
 - The site is to be hosted using Github Pages.
 - The website needs a CI/CD pipeline.
   - When changes are pushed, Github pages should get updated and the client's cache should bust.
